@@ -43,9 +43,9 @@ public class Player extends mutation.sim.Player {
     public Mutagen Play(Console console, int m){
       Mutagen result = new Mutagen();
       HashMap<String, Integer> evidence = new HashMap<>();
+      List<String> visited = new ArrayList<>();
 
       for (int i = 0; i < 10; ++ i){
-
         // run a random experiment
         String genome = randomString();
         String mutated = console.Mutate(genome);
@@ -62,10 +62,12 @@ public class Player extends mutation.sim.Player {
 
         //guess strongest evidence
         String maxString = Utilities.argMax(evidence);
-        if(maxString != null || evidence.get(maxString) == 1){
+        if(visited.contains(maxString)){
+          continue;
+        }
+
+        if(maxString != null && evidence.get(maxString) > 1){
           Change maxEvidence = Change.fromChangeString(maxString);
-
-
           result.add(Utilities.formatPattern(maxEvidence.before),maxEvidence.after);
           boolean guess = console.Guess(result);
           if(guess){
