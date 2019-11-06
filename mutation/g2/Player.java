@@ -16,6 +16,10 @@ goals:
 Make smarter test cases
 Handle more complicated mutations
 Possibly model after the scientific method ( can we model that as a search problem)
+
+TODO:
+find original base length
+deal with multiple rules
  */
 
 package mutation.g2;
@@ -62,7 +66,7 @@ public class Player extends mutation.sim.Player {
 			for(Change c: changes) {
 				mutations.add(Utilities.toSets(c.before, c.after, c.location));
 			}
-			List<Change> changesWithNumber = new ArrayList<>();
+			
 			System.out.println("Start Combination...");
 			// try all the two combination of mutations, a mutation can be considered only if it appears more than twice
 			for(int j = 0; j < mutations.size(); j++) {
@@ -88,7 +92,7 @@ public class Player extends mutation.sim.Player {
 			List<Rule> rules = new ArrayList<Rule>();
 			while(!find || rules.size() == 0) {
 				// if one mutation appears too much, it should not be a normal mutation, the upper bound is 2*(i+1)*m (can be further discussed)
-				String maxString = Utilities.argMax(evidence, discard, 2*(i+1)*m);
+				String maxString = Utilities.argMax(evidence, discard, (i+1)*m);
 				List<Integer> locations = indexes.get(maxString);
 				// a string is only considered once
 				discard.add(maxString);
@@ -106,6 +110,7 @@ public class Player extends mutation.sim.Player {
 					changesWithNumber.add(maxEvidence);
 
 					find = true;
+
 				}
 				List<Rule> unfilteredRules = Utilities.generateRules(changesWithNumber);
 				for (Rule r : unfilteredRules) {
@@ -120,9 +125,6 @@ public class Player extends mutation.sim.Player {
 			}
 
 			System.out.println("RULES:");
-
-
-			System.out.println("RULESIZE" + rules.size());
 			for(Rule r: rules) {
 				//System.out.println(r.formatBefore());
 				//System.out.println(r.after);
@@ -135,6 +137,7 @@ public class Player extends mutation.sim.Player {
 				break;
 			}
 			//Utilities.alert(evidence);
+
 			System.out.println(evidence.size());
 			// collect evidence
 			//        for(Change c: changes){
