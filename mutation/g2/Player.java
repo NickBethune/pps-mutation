@@ -41,7 +41,7 @@ public class Player extends mutation.sim.Player {
 	}
 
 	public Mutagen Play(Console console, int m){
-
+		double noveltyThreshold = .5;
 		HashMap<String, Integer> evidence = new HashMap<>();
 		//index array of evidences
 		HashMap<String, List<Integer>> indexes = new HashMap<>();
@@ -83,15 +83,17 @@ public class Player extends mutation.sim.Player {
 					}
 				}
 			}
+			System.out.println("AAA");
 			boolean find = false;
-			while(!find) {
+			List<Rule> rules = new ArrayList<Rule>();
+			while(!find || rules.size() == 0) {
 				// if one mutation appears too much, it should not be a normal mutation, the upper bound is 2*(i+1)*m (can be further discussed)
 				String maxString = Utilities.argMax(evidence, discard, 2*(i+1)*m);
 				List<Integer> locations = indexes.get(maxString);
 				// a string is only considered once
 				discard.add(maxString);
 				for(int location: locations) {
-					Change maxEvidence;
+						Change maxEvidence;
 					// only consider same length of the strings before and after mutation
 					// TODO: find correct "before" length
 					if(location+maxString.length() > 1000)
@@ -102,15 +104,29 @@ public class Player extends mutation.sim.Player {
 					if(maxEvidence.before.equals(maxEvidence.after))
 						continue;
 					changesWithNumber.add(maxEvidence);
+
 					find = true;
+				}
+				List<Rule> unfilteredRules = Utilities.generateRules(changesWithNumber);
+				for (Rule r : unfilteredRules) {
+					if(r.getNoveltyScore() < noveltyThreshold) {
+						System.out.println(r + " " + r.getNoveltyScore());
+						rules.add(r);
+					} else {
+						//System.out.println(r + " " + r.getNoveltyScore());
+						//find = false;
+					}
 				}
 			}
 
 			System.out.println("RULES:");
-			List<Rule> rules = Utilities.generateRules(changesWithNumber);
+
+
+			System.out.println("RULESIZE" + rules.size());
 			for(Rule r: rules) {
-				System.out.println(r.formatBefore());
-				System.out.println(r.after);
+				//System.out.println(r.formatBefore());
+				//System.out.println(r.after);
+				System.out.println("NOVELTY FOR " + r + "\n" + r.getNoveltyScore() + "\n");
 				result.add(r.formatBefore(), r.after);
 			}
 			boolean guess = console.Guess(result);
@@ -118,7 +134,7 @@ public class Player extends mutation.sim.Player {
 				Utilities.alert("Correct!");
 				break;
 			}
-			Utilities.alert(evidence);
+			//Utilities.alert(evidence);
 			System.out.println(evidence.size());
 			// collect evidence
 			//        for(Change c: changes){

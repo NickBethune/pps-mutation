@@ -215,7 +215,7 @@ public class Utilities {
 	// compare two mutations and output all possible combinations of these two
 	public static List<String> compareTwoMutations(Mutation mutation1, Mutation mutation2, String before, String after) {
 		int index = 0;
-		while(before.charAt(mutation1.location+index) == after.charAt(mutation1.location+index) && before.charAt(mutation2.location+index) == after.charAt(mutation2.location+index))
+		while(before.charAt((mutation1.location+index) % 1000) == after.charAt((mutation1.location+index) % 1000) && before.charAt((mutation2.location+index) % 1000) == after.charAt((mutation2.location+index) % 1000))
 			index++;
 		List<List<Character>> possibleBases = new ArrayList<List<Character>>();
 		for(int i = 0; i < 10; i++) {
@@ -278,6 +278,15 @@ class Rule {
 		}
 		rule += "@" + after;
 		return rule;
+	}
+
+	public double getNoveltyScore() {
+		double numerator = 1;
+		for(String s : before) {
+			numerator *= s.length();
+		}
+		double denominator = Math.pow(4, before.length	);
+		return numerator/denominator;
 	}
 
 }
