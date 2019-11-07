@@ -97,12 +97,14 @@ public class Player extends mutation.sim.Player {
 //          }
 //        }
 	  }
+	  //////////part i added
 	  Iterator hmIterator = rulesWithCount.entrySet().iterator();
 	  while (hmIterator.hasNext()) { 
 		Map.Entry mapElement = (Map.Entry)hmIterator.next(); 
 		int marks = ((int)mapElement.getValue()); 
 		System.out.println(mapElement.getKey() + " : " + marks); 
-	} 
+		} 
+		////////////
       for(int i = 0; i < 10; ++ i){
         Mutagen result = new Mutagen();
         String genome = randomString();
