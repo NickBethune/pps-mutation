@@ -279,6 +279,14 @@ class Rule {
 		rule += "@" + after;
 		return rule;
 	}
+	public double getNoveltyScore() {
+		double numerator = 1;
+		for(String s : before) {
+			numerator *= s.length();
+		}
+		double denominator = Math.pow(4, before.length	);
+		return numerator/denominator;
+	}
 
 }
 // ADT for a change type

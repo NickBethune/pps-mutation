@@ -45,7 +45,7 @@ public class Player extends mutation.sim.Player {
 	}
 
 	public Mutagen Play(Console console, int m){
-
+		double noveltyThreshold = .5;
 		HashMap<String, Integer> evidence = new HashMap<>();
 		//index array of evidences
 		HashMap<String, List<Integer>> indexes = new HashMap<>();
@@ -111,8 +111,14 @@ public class Player extends mutation.sim.Player {
 				}
 				if(changesWithNumber.size() != 0) {
 					rules = Utilities.generateRules(changesWithNumber);
+					boolean novelRules = true;
+					for(Rule r:rules) {
+						if(r.getNoveltyScore() > noveltyThreshold)
+							System.out.println("BadRule " + r.toString() + "   " + r.getNoveltyScore());
+							novelRules = false;
+					}
 					String[] bef = rules.get(0).before;
-					if(bef[bef.length-1].length() == 4)
+					if(bef[bef.length-1].length() == 4 || !novelRules)
 						discard.add(maxString);
 					else
 						find = true;
